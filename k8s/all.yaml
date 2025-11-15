@@ -133,7 +133,7 @@ data:
 
     spring:
       datasource:
-        url: jdbc:postgresql://192.168.0.28:5432/muffin_wallet
+        url: jdbc:postgresql://host.minikube.internal:5432/muffin_wallet
         username: muffin-wallet
 
     currency:
