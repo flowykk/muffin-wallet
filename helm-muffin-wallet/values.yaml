@@ -1,0 +1,53 @@
+replicaCount: 3
+
+image:
+  repository: aadan1lov/muffin-wallet
+  pullPolicy: Always
+  tag: "1.1.0"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8081
+
+ingress:
+  enabled: true
+  className: nginx
+  host: muffin-wallet.com
+  path: /
+  pathType: Prefix
+
+config:
+  server:
+    port: 8081
+  spring:
+    datasource:
+      url: jdbc:postgresql://host.minikube.internal:5432/muffin_wallet
+      username: muffin-wallet
+      password: muffin-wallet  # base64: bXVmZmluLXdhbGxldA==
+  currency:
+    service:
+      url: http://muffin-currency:8083/rate
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health, info
+    endpoint:
+      health:
+        probes:
+          enabled: true
+        showDetails: always
+
+probes:
+  liveness:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 75
+    periodSeconds: 10
+  readiness:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 75
+    periodSeconds: 5

@@ -1,0 +1,34 @@
+appName: muffin-currency
+
+replicaCount: 2
+
+image:
+  repository: userviktoriuss/muffin-currency
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+ports:
+  containerPort: 8080
+  servicePort: 8083
+
+serviceType: ClusterIP
+
+healthCheck:
+  enabled: true  # если false, health checks не будут добавлены
+  path: /rate?from=PLAIN&to=CHOKOLATE
+  liveness:
+    initialDelaySeconds: 4
+    periodSeconds: 10
+  readiness:
+    initialDelaySeconds: 2
+    periodSeconds: 5
+
+resources:
+  enabled: false
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
