@@ -1,4 +1,31 @@
-# Muffin wallet
+# Описание выполненной работы
+
+Проект состоит из двух микросервисов: `muffin-wallet` и `muffin-currency`. Для деплоя в Kubernetes используется Helm.
+
+### Запуск
+
+Основные инструкции прописаны в файлах `NOTES.txt` и будут выводиться в терминале после установки соответствующего релиза
+
+```bash
+# Установка чартов
+helm install muffin-currency helm-muffin-currency/
+helm install muffin-wallet helm-muffin-wallet/
+
+# Проверяем установленные релизы
+helm list
+kubectl get pods
+```
+
+## Ещё разные команды
+
+```bash
+# Обновить релиз с новыми правками
+helm upgrade muffin-wallet helm-muffin-wallet/ --set replicaCount=5
+
+# Удалить релизы
+helm uninstall muffin-wallet
+helm uninstall muffin-currency
+```
 
 ## Database structure
 
