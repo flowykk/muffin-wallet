@@ -1,0 +1,21 @@
+Muffin Wallet установлен: {{ include "helm-muffin-wallet.fullname" . }}
+
+Параметры:
+  Реплики: {{ .Values.replicaCount }}
+  Образ: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+  Сервис: {{ .Values.service.type }} на порту {{ .Values.service.port }}
+
+Проверить статус:
+  kubectl get pods -l app.kubernetes.io/name={{ include "helm-muffin-wallet.name" . }}
+
+{{- if .Values.ingress.enabled }}
+Доступ через Ingress:
+  http://{{ .Values.ingress.host }}{{ .Values.ingress.path }}
+
+Для локального тестирования добавь в /etc/hosts:
+  echo "$(minikube ip) {{ .Values.ingress.host }}" | sudo tee -a /etc/hosts
+{{- else }}
+Доступ к приложению:
+  kubectl port-forward service/{{ include "helm-muffin-wallet.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+  curl http://localhost:{{ .Values.service.port }}/actuator/health
+{{- end }}
