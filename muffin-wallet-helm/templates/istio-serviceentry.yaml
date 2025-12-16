@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: postgres-external
+  namespace: default
+spec:
+  hosts:
+    - {{ .Values.postgres.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  ports:
+    - number: {{ .Values.postgres.service.port }}
+      name: tcp-postgres
+      protocol: TCP
+  location: MESH_INTERNAL
+  resolution: DNS
+

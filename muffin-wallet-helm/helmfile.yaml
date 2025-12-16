@@ -1,0 +1,5 @@
+releases:
+  - name: muffin-wallet
+    chart: .
+    values:
+      - values.yaml

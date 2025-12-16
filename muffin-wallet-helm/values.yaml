@@ -1,0 +1,110 @@
+muffinWallet:
+  name: muffin-wallet
+  serviceAccount: muffin-wallet
+  configMapName: muffin-wallet
+  envConfigMapName: muffin-wallet-env
+  secretName: muffin-wallet
+  configMountPath: /app/config
+  logMountPath: /logs
+  
+  replicas: 3
+  image: aadan1lov/muffin-wallet:1.1.0
+  imagePullPolicy: Always
+  containerPort: 8081
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/muffin_wallet
+    username: muffin-wallet
+    password: muffin-wallet
+
+  livenessProbe:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 150
+    periodSeconds: 10
+    failureThreshold: 5
+
+  readinessProbe:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    failureThreshold: 10
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8081
+
+  logService:
+    enabled: true
+    port: 80
+    targetPort: 80
+
+muffinCurrency:
+  name: muffin-currency
+  replicas: 2
+  image: aadan1lov/muffin-currency:1.0.0
+  imagePullPolicy: IfNotPresent
+  containerPort: 8080
+
+  service:
+    type: ClusterIP
+    port: 8083
+    targetPort: 8080
+
+  livenessProbe:
+    path: /rate?from=PLAIN&to=CHOKOLATE
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+  readinessProbe:
+    path: /rate?from=PLAIN&to=CHOKOLATE
+    initialDelaySeconds: 2
+    periodSeconds: 5
+
+nginx:
+  image: nginx:1.29.3
+  configMapName: nginx-config
+  configMountPath: /etc/nginx
+  logMountPath: /usr/share/nginx/html
+
+postgres:
+  name: postgres
+  image: postgres:15
+  username: muffin-wallet
+  password: muffin-wallet
+  database: muffin_wallet
+
+  service:
+    port: 5432
+
+ingress:
+  enabled: false
+  className: nginx
+  hosts:
+    - host: muffin-wallet.ru
+      serviceName: muffin-wallet
+      servicePort: 80
+    - host: muffin-wallet-log.ru
+      serviceName: muffin-wallet-log
+      servicePort: 80
+
+istioGateway:
+  host: wallet.example.com
+
+istioResilience:
+  muffinCurrency:
+    timeout: 5s
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+      retryOn: "5xx,reset,connect-failure,retriable-4xx"
+    connectionPool:
+      maxConnections: 100
+      http1MaxPendingRequests: 100
+      http2MaxRequests: 1000
+      maxRetries: 3
+    circuitBreaker:
+      consecutive5xxErrors: 5
+      interval: 10s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50

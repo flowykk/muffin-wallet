@@ -1,0 +1,25 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: default
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Values.muffinCurrency.name }}-policy
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.muffinCurrency.name }}
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/default/sa/{{ .Values.muffinWallet.serviceAccount }}
+

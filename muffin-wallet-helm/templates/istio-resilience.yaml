@@ -1,0 +1,43 @@
+# DestinationRule для muffin-currency — Circuit Breaker + Connection Pool
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: {{ .Values.muffinCurrency.name }}-dr
+  namespace: default
+spec:
+  host: {{ .Values.muffinCurrency.name }}
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: {{ .Values.istioResilience.muffinCurrency.connectionPool.maxConnections }}
+      http:
+        http1MaxPendingRequests: {{ .Values.istioResilience.muffinCurrency.connectionPool.http1MaxPendingRequests }}
+        http2MaxRequests: {{ .Values.istioResilience.muffinCurrency.connectionPool.http2MaxRequests }}
+        maxRetries: {{ .Values.istioResilience.muffinCurrency.connectionPool.maxRetries }}
+    outlierDetection:
+      consecutive5xxErrors: {{ .Values.istioResilience.muffinCurrency.circuitBreaker.consecutive5xxErrors }}
+      interval: {{ .Values.istioResilience.muffinCurrency.circuitBreaker.interval }}
+      baseEjectionTime: {{ .Values.istioResilience.muffinCurrency.circuitBreaker.baseEjectionTime }}
+      maxEjectionPercent: {{ .Values.istioResilience.muffinCurrency.circuitBreaker.maxEjectionPercent }}
+---
+# VirtualService для muffin-currency — Retry + Timeout
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.muffinCurrency.name }}-vs
+  namespace: default
+spec:
+  hosts:
+    - {{ .Values.muffinCurrency.name }}
+  http:
+    - route:
+        - destination:
+            host: {{ .Values.muffinCurrency.name }}
+            port:
+              number: {{ .Values.muffinCurrency.service.port }}
+      timeout: {{ .Values.istioResilience.muffinCurrency.timeout }}
+      retries:
+        attempts: {{ .Values.istioResilience.muffinCurrency.retries.attempts }}
+        perTryTimeout: {{ .Values.istioResilience.muffinCurrency.retries.perTryTimeout }}
+        retryOn: {{ .Values.istioResilience.muffinCurrency.retries.retryOn }}
+

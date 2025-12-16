@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.muffinWallet.name }}
+  labels:
+    app: {{ .Values.muffinWallet.name }}
+spec:
+  replicas: {{ .Values.muffinWallet.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.muffinWallet.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.muffinWallet.name }}
+    spec:
+      serviceAccountName: {{ .Values.muffinWallet.serviceAccount }}
+      volumes:
+        - name: application-config-volume
+          configMap:
+            name: {{ .Values.muffinWallet.configMapName }}
+        - name: nginx-config-volume
+          configMap:
+            name: {{ .Values.nginx.configMapName }}
+        - name: log-volume
+          emptyDir: {}
+      containers:
+        - name: nginx-log
+          image: {{ .Values.nginx.image }}
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: {{ .Values.nginx.configMountPath }}
+            - name: log-volume
+              mountPath: {{ .Values.nginx.logMountPath }}
+        - name: {{ .Values.muffinWallet.name }}
+          image: {{ .Values.muffinWallet.image }}
+          imagePullPolicy: {{ .Values.muffinWallet.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.muffinWallet.containerPort }}
+          volumeMounts:
+            - name: application-config-volume
+              mountPath: {{ .Values.muffinWallet.configMountPath }}
+            - name: log-volume
+              mountPath: {{ .Values.muffinWallet.logMountPath }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.muffinWallet.secretName }}
+            - configMapRef:
+                name: {{ .Values.muffinWallet.envConfigMapName }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.muffinWallet.livenessProbe.path }}
+              port: {{ .Values.muffinWallet.containerPort }}
+            initialDelaySeconds: {{ .Values.muffinWallet.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.muffinWallet.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.muffinWallet.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.muffinWallet.readinessProbe.path }}
+              port: {{ .Values.muffinWallet.containerPort }}
+            initialDelaySeconds: {{ .Values.muffinWallet.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.muffinWallet.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.muffinWallet.readinessProbe.failureThreshold }}
