@@ -85,19 +85,16 @@ istioGateway:
   host: wallet.example.com
 
 istioResilience:
-  muffinCurrency:
-    timeout: 5s
-    retries:
-      attempts: 3
-      perTryTimeout: 2s
-      retryOn: "5xx,reset,connect-failure,retriable-4xx"
-    connectionPool:
-      maxConnections: 100
-      http1MaxPendingRequests: 100
-      http2MaxRequests: 1000
-      maxRetries: 3
-    circuitBreaker:
-      consecutive5xxErrors: 5
-      interval: 10s
-      baseEjectionTime: 30s
-      maxEjectionPercent: 50
+  timeout: 5s
+  retries:
+    attempts: 3
+    perTryTimeout: 2s
+    retryOn: 5xx,reset,connect-failure
+  connectionPool:
+    maxPendingRequests: 100
+    maxRequests: 1000
+  circuitBreaker:
+    consecutive5xxErrors: 5
+    interval: 10s
+    baseEjectionTime: 30s
+    maxEjectionPercent: 50
