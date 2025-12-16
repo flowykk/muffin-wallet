@@ -72,7 +72,6 @@ postgres:
   database: muffin_wallet
 
 ingress:
-  enabled: false
   className: nginx
   hosts:
     - host: muffin-wallet.ru
