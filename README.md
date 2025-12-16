@@ -207,6 +207,30 @@ serviceaccount/default         0         46h
 serviceaccount/muffin-wallet   0         3s
 ```
 
+### Важно
+
+`ServiceAccount` написан для того, чтобы запросы пускало ТОЛЬКО с указанием определённого `ServiceAccount`, иначе запрос будет возвращать `RBAC: Access denied`. При желании ServiceAccount можно удалть, убрать его использование из deployment.yaml, тогда получим такой результат:
+
+```bash
+# С serviceAccount = default запрос будет проходить
+kubectl run test-default --image=curlimages/curl --rm -it --restart=Never \
+  -- curl -s "http://muffin-currency:8083/rate?from=PLAIN&to=CHOKOLATE"
+
+# Результат
+{"from":"PLAIN","to":"CHOKOLATE","rate":0.013}
+```
+
+```bash
+# С левым serviceAccount запрос проходить не будет
+kubectl create serviceaccount muffin-wallet
+kubectl run test-wallet --image=curlimages/curl --rm -it --restart=Never \
+  --overrides='{"spec":{"serviceAccountName":"muffin-wallet"}}' \
+  -- curl -s "http://muffin-currency:8083/rate?from=PLAIN&to=CHOKOLATE"
+
+# Результат
+RBAC: access denied
+```
+
 ### Проверка mTLS в Kiali
 
 Теперь на схеме увидим замочки на линиях между сервисами — это mTLS. Вот как это выглядит:
