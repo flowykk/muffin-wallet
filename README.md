@@ -327,23 +327,19 @@ kubectl exec deploy/muffin-wallet -c istio-proxy -- \
 
 ```yaml
 istioResilience:
-  enabled: true
-  muffinCurrency:
-    timeout: 5s
-    retries:
-      attempts: 3
-      perTryTimeout: 2s              # timeout на каждую попытку
-      retryOn: "5xx,reset,connect-failure,retriable-4xx"
-    connectionPool:
-      maxConnections: 100
-      http1MaxPendingRequests: 100   # очередь запросов
-      http2MaxRequests: 1000         # макс активных запросов
-      maxRetries: 3
-    circuitBreaker:
-      consecutive5xxErrors: 5        # ошибок до выброса
-      interval: 10s                  # интервал анализа
-      baseEjectionTime: 30s          # время выброса
-      maxEjectionPercent: 50         # макс % выброшенных
+  timeout: 5s
+  retries:
+    attempts: 3
+    perTryTimeout: 2s              # timeout на каждую попытку
+    retryOn: "5xx,reset,connect-failure,retriable-4xx"
+  connectionPool:
+    maxPendingRequests: 100
+    maxRequests: 1000
+  circuitBreaker:
+    consecutive5xxErrors: 5        # ошибок до выброса
+    interval: 10s                  # интервал анализа
+    baseEjectionTime: 30s          # время выброса
+    maxEjectionPercent: 50         # макс % выброшенных
 ```
 
 ## Gateway, VirtualService, ServiceEntry
