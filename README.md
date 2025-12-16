@@ -257,15 +257,6 @@ RBAC: access denied
 
 ## Resilience (Circuit Breaker, Retry, Timeout)
 
-### Что настроено
-
-| Компонент | Описание |
-|-----------|----------|
-| **Circuit Breaker** | Выбрасывает нездоровые инстансы после 5 ошибок 5xx |
-| **Retry** | 3 повторные попытки при сбоях (5xx, reset, connect-failure) |
-| **Timeout** | Максимум 5 секунд на запрос к muffin-currency |
-| **Connection Pool** | Лимиты: 100 соединений, 1000 активных запросов |
-
 ### Проверить что ресурсы созданы
 
 ```bash
