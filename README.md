@@ -213,13 +213,11 @@ serviceaccount/muffin-wallet   0         3s
 
 ### Проверка mTLS в Kiali
 
-```bash
-istioctl dashboard kiali
-```
+Теперь на схеме увидим замочки на линиях между сервисами — это mTLS. Вот как это выглядит:
 
-Видим замочки на линиях между сервисами — это mTLS. Вот как это выглядит:
+<img width="993" height="188" alt="Screenshot 2025-12-16 at 08 47 08" src="https://github.com/user-attachments/assets/441454da-d7d3-4831-b5fd-dd31fcdd1edf" />
 
-СКРИН
+<img width="1230" height="360" alt="Screenshot 2025-12-16 at 09 17 01" src="https://github.com/user-attachments/assets/2056e9ba-aad9-46cd-8d7b-2f23f1b2ad1a" />
 
 ### Проверка mTLS через обращения к сервису
 
@@ -401,4 +399,5 @@ kubectl logs -l app=muffin-wallet -c istio-proxy --tail=20 | grep postgres
 
 Или через Kiali:
 
-СКРИН
+![2025-12-16 09 59 10](https://github.com/user-attachments/assets/5da1a80b-6cc5-45c5-a2bc-69a72fbacda7)
+
