@@ -134,7 +134,7 @@ istioctl dashboard kiali
 
 Результат:
 
-СКРИН
+<img width="1603" height="440" alt="Screenshot 2025-12-16 at 08 19 06" src="https://github.com/user-attachments/assets/6ff95472-7583-4153-9337-07c756006c1f" />
 
 ### Prometheus — метрики
 
@@ -176,7 +176,11 @@ istioctl dashboard grafana
 
 Увидим такой результат:
 
-СКРИН
+<img width="1512" alt="Screenshot 2025-12-16 at 08 24 30" src="https://github.com/user-attachments/assets/a3e25a15-ad5a-481e-bf50-6519d3f80e0b" />
+
+<img width="1888" alt="Screenshot 2025-12-16 at 08 24 39" src="https://github.com/user-attachments/assets/a500fe93-5a06-4b47-919e-7698b1988f17" />
+
+<img width="1910" alt="Screenshot 2025-12-16 at 08 24 47" src="https://github.com/user-attachments/assets/56fb82c9-8747-4181-a4d0-e3f1d3a7d204" />
 
 ## Security (mTLS + AuthorizationPolicy)
 
