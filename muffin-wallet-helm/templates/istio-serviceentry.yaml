@@ -5,11 +5,11 @@ metadata:
   namespace: default
 spec:
   hosts:
-    - {{ .Values.postgres.name }}.{{ .Release.Namespace }}.svc.cluster.local
+    - {{ .Values.postgres.externalHost }}
   ports:
-    - number: {{ .Values.postgres.service.port }}
+    - number: {{ .Values.postgres.port }}
       name: tcp-postgres
       protocol: TCP
-  location: MESH_INTERNAL
+  location: MESH_EXTERNAL
   resolution: DNS
 

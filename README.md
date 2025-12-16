@@ -17,15 +17,10 @@ curl http://wallet.example.com/v1/muffin-wallets
 # Создать кошелёк Jack
 curl -X POST http://wallet.example.com/v1/muffin-wallets \
   -H "Content-Type: application/json" \
-  -d '{"owner_name": "Jack"}'
+  -d '{"type": "CHOKOLATE", "owner_name": "Jack"}'
 
-# Создать кошелёк Bob
-curl -X POST http://wallet.example.com/v1/muffin-wallets \
-  -H "Content-Type: application/json" \
-  -d '{"owner_name": "Bob"}'
-
-# Получить кошелёк по ID = 101
-curl http://wallet.example.com/v1/muffin-wallet/101
+# Получить кошелёк по ID
+curl http://wallet.example.com/v1/muffin-wallet/{id}
 
 # Транзакция
 curl -X POST http://wallet.example.com/v1/muffin-wallet/{from_id}/transaction \
@@ -33,7 +28,7 @@ curl -X POST http://wallet.example.com/v1/muffin-wallet/{from_id}/transaction \
   -d '{"to_muffin_wallet_id": "{to_id}", "amount": 10}'
 
 # Поиск по имени владельца
-curl "http://wallet.example.com/v1/muffin-wallets?owner_name=Bob"
+curl "http://wallet.example.com/v1/muffin-wallets?owner_name=Jack"
 ```
 
 ### muffin-currency API (через port-forward)
@@ -41,6 +36,7 @@ curl "http://wallet.example.com/v1/muffin-wallets?owner_name=Bob"
 ```bash
 # Через port-forward (без istio)
 kubectl port-forward svc/muffin-currency 8083:8083
+
 # Получить курс обмена
 curl "http://localhost:8083/rate?from=PLAIN&to=CHOKOLATE"
 
@@ -371,16 +367,14 @@ kubectl run test-wallet --image=curlimages/curl --rm -it --restart=Never \
 
 ### 3. ServiceEntry — взаимодействие с внешней БД
 
-Написан в файле `istio-serviceentry.yaml`. 
-
-Насколько понимаю благодаря ServiceEntry Postgres теперь явно зарегистрирован в Service Mesh, то есть Istio полностью отслеживает весь трафик. + Гарантированно виден в Kiali как `postgres-external`.
+Написан в файле `istio-serviceentry.yaml`. Посколько БД запущена вне кластера, ServiceEntry регистрирует его в Service Mesh как внешний сервис, что позволяет Istio отслеживать весь TCP-трафик к БД и показывать его в Kiali.
 
 ```bash
 kubectl get serviceentry
 
 # Результат
-NAME                HOSTS                                    LOCATION        RESOLUTION   AGE
-postgres-external   ["postgres.default.svc.cluster.local"]   MESH_INTERNAL   DNS          36m
+NAME                HOSTS                        LOCATION        RESOLUTION   AGE
+postgres-external   ["host.minikube.internal"]   MESH_EXTERNAL   DNS          9h
 ```
 
 И весь трафик можно ещё отследить так:

@@ -13,7 +13,6 @@ muffinWallet:
   containerPort: 8081
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/muffin_wallet
     username: muffin-wallet
     password: muffin-wallet
 
@@ -68,14 +67,9 @@ nginx:
   logMountPath: /usr/share/nginx/html
 
 postgres:
-  name: postgres
-  image: postgres:15
-  username: muffin-wallet
-  password: muffin-wallet
+  externalHost: host.minikube.internal
+  port: 5432
   database: muffin_wallet
-
-  service:
-    port: 5432
 
 ingress:
   enabled: false

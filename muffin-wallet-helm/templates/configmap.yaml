@@ -17,7 +17,7 @@ data:
 
     spring:
       datasource:
-        url: {{ .Values.muffinWallet.datasource.url }}
+        url: jdbc:postgresql://{{ .Values.postgres.externalHost }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}
         username: {{ .Values.muffinWallet.datasource.username }}
     logging.file.name: {{ .Values.muffinWallet.logMountPath }}/app.log
     currency:
