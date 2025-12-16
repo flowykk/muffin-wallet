@@ -130,7 +130,7 @@ istioctl dashboard kiali
 
 Результат:
 
-<img width="1603" height="440" alt="Screenshot 2025-12-16 at 08 19 06" src="https://github.com/user-attachments/assets/6ff95472-7583-4153-9337-07c756006c1f" />
+<img width="1071" height="288" alt="image" src="https://github.com/user-attachments/assets/023a1b33-3a63-4b22-90f3-e256c8d1b72e" />
 
 ### Prometheus — метрики
 
