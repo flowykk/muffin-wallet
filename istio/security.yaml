@@ -10,16 +10,16 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ .Values.muffinCurrency.name }}-policy
+  name: muffin-currency-policy
   namespace: default
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.muffinCurrency.name }}
+      app: muffin-currency
   action: ALLOW
   rules:
     - from:
         - source:
             principals:
-              - cluster.local/ns/default/sa/{{ .Values.muffinWallet.serviceAccount }}
+              - cluster.local/ns/default/sa/muffin-wallet
 

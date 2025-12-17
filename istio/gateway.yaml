@@ -1,7 +1,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: {{ .Values.muffinWallet.name }}-gateway
+  name: muffin-wallet-gateway
+  namespace: default
 spec:
   selector:
     istio: ingressgateway
@@ -11,23 +12,25 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - {{ .Values.istioGateway.host }}
+        - wallet.example.com
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ .Values.muffinWallet.name }}-vs
+  name: muffin-wallet-vs
+  namespace: default
 spec:
   hosts:
-    - {{ .Values.istioGateway.host }}
+    - wallet.example.com
   gateways:
-    - {{ .Values.muffinWallet.name }}-gateway
+    - muffin-wallet-gateway
   http:
     - match:
         - uri:
             prefix: /
       route:
         - destination:
-            host: {{ .Values.muffinWallet.name }}
+            host: muffin-wallet
             port:
-              number: {{ .Values.muffinWallet.service.port }}
+              number: 80
+

@@ -64,21 +64,3 @@ ingress:
     - host: muffin-wallet-log.ru
       serviceName: muffin-wallet-log
       servicePort: 80
-
-istioGateway:
-  host: wallet.example.com
-
-istioResilience:
-  timeout: 5s
-  retries:
-    attempts: 3
-    perTryTimeout: 2s
-    retryOn: 5xx,reset,connect-failure
-  connectionPool:
-    maxPendingRequests: 100
-    maxRequests: 1000
-  circuitBreaker:
-    consecutive5xxErrors: 5
-    interval: 10s
-    baseEjectionTime: 30s
-    maxEjectionPercent: 50
