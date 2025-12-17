@@ -323,30 +323,11 @@ kubectl exec deploy/muffin-wallet -c istio-proxy -- \
   pilot-agent request GET stats | grep "timeout"
 ```
 
-Все значения лежат в values.yaml
-
-```yaml
-istioResilience:
-  timeout: 5s
-  retries:
-    attempts: 3
-    perTryTimeout: 2s              # timeout на каждую попытку
-    retryOn: "5xx,reset,connect-failure,retriable-4xx"
-  connectionPool:
-    maxPendingRequests: 100
-    maxRequests: 1000
-  circuitBreaker:
-    consecutive5xxErrors: 5        # ошибок до выброса
-    interval: 10s                  # интервал анализа
-    baseEjectionTime: 30s          # время выброса
-    maxEjectionPercent: 50         # макс % выброшенных
-```
-
 ## Gateway, VirtualService, ServiceEntry
 
 ### Gateway
 
-Написан в файле `istio-gateway.yaml`
+Написан в файле `istio/gateway.yaml`
 
 ```bash
 kubectl get gateway
@@ -360,7 +341,7 @@ muffin-wallet-gateway   45h
 
 #### Внешняя маршрутизация
 
-Написан в файле `istio-gateway.yaml`. Позволяет использовать хост `wallet.example.com`
+Написан в файле `istio/gateway.yaml`. Позволяет использовать хост `wallet.example.com`
 
 То есть благодаря нему можно делать так:
 
@@ -373,7 +354,7 @@ curl http://wallet.example.com/actuator/health
 
 #### Внутренняя маршрутизация (между сервисами)
 
-Написан в файле `istio-resilience.yaml`. Управляет маршрутизацией из `muffin-wallet` в `muffin-currency`, работой Retry, Timeout
+Написан в файле `istio/resilience.yaml`. Управляет маршрутизацией из `muffin-wallet` в `muffin-currency`, работой Retry, Timeout
 
 **Проверка:**
 ```bash
@@ -387,7 +368,7 @@ kubectl run test-wallet --image=curlimages/curl --rm -it --restart=Never \
 
 ### 3. ServiceEntry — взаимодействие с внешней БД
 
-Написан в файле `istio-serviceentry.yaml`. Посколько БД запущена вне кластера, ServiceEntry регистрирует его в Service Mesh как внешний сервис, что позволяет Istio отслеживать весь TCP-трафик к БД и показывать его в Kiali.
+Написан в файле `istio/serviceentry.yaml`. Посколько БД запущена вне кластера, ServiceEntry регистрирует его в Service Mesh как внешний сервис, что позволяет Istio отслеживать весь TCP-трафик к БД и показывать его в Kiali.
 
 ```bash
 kubectl get serviceentry
