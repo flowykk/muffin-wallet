@@ -33,4 +33,3 @@ spec:
             host: muffin-wallet
             port:
               number: 80
-

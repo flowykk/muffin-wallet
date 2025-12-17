@@ -44,7 +44,6 @@ nginx:
   configMountPath: /etc/nginx
   logMountPath: /usr/share/nginx/html
 
-# Внешние зависимости (деплоятся отдельным чартом)
 muffinCurrency:
   name: muffin-currency
   service:
