@@ -1,0 +1,13 @@
+releases:
+  - name: muffin-currency
+    chart: ./muffin-currency-helm
+    values:
+      - ./muffin-currency-helm/values.yaml
+
+  - name: muffin-wallet
+    chart: ./muffin-wallet-helm
+    values:
+      - ./muffin-wallet-helm/values.yaml
+    needs:
+      - muffin-currency
+

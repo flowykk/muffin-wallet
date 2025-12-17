@@ -32,16 +32,4 @@ spec:
               port: {{ .Values.muffinCurrency.containerPort }}
             initialDelaySeconds: {{ .Values.muffinCurrency.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.muffinCurrency.readinessProbe.periodSeconds }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.muffinCurrency.name }}
-spec:
-  type: {{ .Values.muffinCurrency.service.type }}
-  selector:
-    app: {{ .Values.muffinCurrency.name }}
-  ports:
-    - protocol: TCP
-      port: {{ .Values.muffinCurrency.service.port }}
-      targetPort: {{ .Values.muffinCurrency.service.targetPort }}
+

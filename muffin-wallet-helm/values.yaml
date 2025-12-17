@@ -38,33 +38,17 @@ muffinWallet:
     port: 80
     targetPort: 80
 
-muffinCurrency:
-  name: muffin-currency
-  replicas: 2
-  image: aadan1lov/muffin-currency:1.0.0
-  imagePullPolicy: IfNotPresent
-  containerPort: 8080
-
-  service:
-    type: ClusterIP
-    port: 8083
-    targetPort: 8080
-
-  livenessProbe:
-    path: /rate?from=PLAIN&to=CHOKOLATE
-    initialDelaySeconds: 5
-    periodSeconds: 10
-
-  readinessProbe:
-    path: /rate?from=PLAIN&to=CHOKOLATE
-    initialDelaySeconds: 2
-    periodSeconds: 5
-
 nginx:
   image: nginx:1.29.3
   configMapName: nginx-config
   configMountPath: /etc/nginx
   logMountPath: /usr/share/nginx/html
+
+# Внешние зависимости (деплоятся отдельным чартом)
+muffinCurrency:
+  name: muffin-currency
+  service:
+    port: 8083
 
 postgres:
   externalHost: host.minikube.internal
